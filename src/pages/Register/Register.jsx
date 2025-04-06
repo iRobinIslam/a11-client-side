@@ -12,7 +12,6 @@ const Register = () => {
   const { createUser, manageProfile, setUser } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
 
-  // handle register
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -22,7 +21,7 @@ const Register = () => {
     const password = e.target.password.value;
 
     if (password.length < 6) {
-      toast.error("Length must be at least 6 character", {
+      toast.error("Password must be at least 6 characters long", {
         position: "top-center",
       });
       return;
@@ -31,23 +30,26 @@ const Register = () => {
     const regex = /^(?=.*[a-z])(?=.*[A-Z]).+$/;
 
     if (!regex.test(password)) {
-      toast.error(
-        "Must have a Uppercase and Lowercase letter in the password  ",
-        {
-          position: "top-center",
-        }
-      );
+      toast.error("Password must contain both uppercase and lowercase letters", {
+        position: "top-center",
+      });
       return;
     }
 
-    createUser(email, password).then((res) => {
-      manageProfile(name, photo);
-      setUser({ displayName: name, photoURL: photo, email: email });
-      toast.success("Register is successfully", {
-        position: "top-center",
+    createUser(email, password)
+      .then(() => {
+        manageProfile(name, photo);
+        setUser({ displayName: name, photoURL: photo, email });
+        toast.success("Registration successful!", {
+          position: "top-center",
+        });
+        navigate("/");
+      })
+      .catch((err) => {
+        toast.error(err.message || "Registration failed", {
+          position: "top-center",
+        });
       });
-      navigate("/");
-    });
   };
 
   return (
@@ -62,13 +64,11 @@ const Register = () => {
       <div className="hero">
         <div className="hero-content flex-col lg:flex-row-reverse gap-6 md:gap-10 lg:gap-24">
           <div className="w-full md:w-96">
-            <Lottie animationData={registerLottieData}></Lottie>
+            <Lottie animationData={registerLottieData} />
           </div>
           <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
             <form onSubmit={handleSubmit} className="card-body">
-              <h3 className="text-center text-2xl font-bold">
-                Register Your Account
-              </h3>
+              <h3 className="text-center text-2xl font-bold">Register Your Account</h3>
               <div className="form-control">
                 <label className="label">
                   <span className="label-text">Name</span>
@@ -118,7 +118,7 @@ const Register = () => {
                 />
                 <span
                   onClick={() => setShowPassword(!showPassword)}
-                  className="btn btn-xs absolute right-5 top-12"
+                  className="btn btn-xs absolute right-5 top-12 cursor-pointer"
                 >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </span>
@@ -130,7 +130,7 @@ const Register = () => {
               </div>
             </form>
             <p className="text-center font-semibold my-3">
-              Already Have an account ?{" "}
+              Already have an account?{" "}
               <Link className="text-red-500" to="/signIn">
                 Login
               </Link>
@@ -142,4 +142,4 @@ const Register = () => {
   );
 };
 
-export default  Register
+export default Register;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import useAuth from "../../hook/useAuth";
@@ -10,20 +10,20 @@ const BeAVolunteerPage = () => {
   const { user } = useAuth();
   const [startDate, setStartDate] = useState(new Date());
   const { id } = useParams();
-
   const [volunteerNeedsDetails, setVolunteerNeedsDetails] = useState({});
 
-  useEffect(() => {
-    document.title = "Be a volunteer page | Volunteer management";
-    fetchJobData();
-  }, [id]);
-
-  const fetchJobData = async () => {
+  // Memoize fetchJobData to avoid unnecessary re-creations and to handle it inside useEffect
+  const fetchJobData = useCallback(async () => {
     const { data } = await axios.get(
       `${import.meta.env.VITE_API_URL}/be-volunteer/${id}`
     );
     setVolunteerNeedsDetails(data);
-  };
+  }, [id]);
+
+  useEffect(() => {
+    document.title = "Be a volunteer page | Volunteer management";
+    fetchJobData();
+  }, [fetchJobData]);  // Added fetchJobData to the dependency array
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -71,17 +71,19 @@ const BeAVolunteerPage = () => {
         position: "top-center",
       });
       console.log(data);
-    } catch (error) {
+    } catch (err) {
       toast.error("Something went wrong", {
         position: "top-center",
       });
+      console.error(err);  // Log the error if needed
     }
   };
+
   return (
     <div className="max-w-7xl mx-auto bg-white rounded-xl">
       <div className="mt-12 mx-4 lg:mx-0 p-3 lg:p-5 rounded-xl">
         <h3 className="text-center my-3 text-3xl text-black font-semibold">
-          Be a volunteer page{" "}
+          Be a volunteer page
         </h3>
         <form onSubmit={handleSubmit}>
           <div className="lg:flex gap-3">
@@ -94,7 +96,7 @@ const BeAVolunteerPage = () => {
                 type="text"
                 defaultValue={volunteerNeedsDetails.thumbnail}
                 disabled
-                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md  focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40  focus:outline-none focus:ring"
+                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring"
               />
             </div>
             <div className="w-full">
@@ -106,7 +108,7 @@ const BeAVolunteerPage = () => {
                 type="text"
                 defaultValue={volunteerNeedsDetails.title}
                 disabled
-                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md  focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40  focus:outline-none focus:ring"
+                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring"
               />
             </div>
           </div>
@@ -138,7 +140,7 @@ const BeAVolunteerPage = () => {
                 type="text"
                 defaultValue={volunteerNeedsDetails.location}
                 disabled
-                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md  focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40  focus:outline-none focus:ring"
+                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring"
               />
             </div>
           </div>
@@ -152,7 +154,7 @@ const BeAVolunteerPage = () => {
                 type="number"
                 defaultValue={volunteerNeedsDetails.number}
                 disabled
-                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md  focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40  focus:outline-none focus:ring"
+                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring"
               />
             </div>
             <div className="w-full">
@@ -180,7 +182,7 @@ const BeAVolunteerPage = () => {
                 type="text"
                 defaultValue={volunteerNeedsDetails.name}
                 disabled
-                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md  focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40  focus:outline-none focus:ring"
+                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring"
               />
             </div>
             <div className="w-full">
@@ -192,7 +194,7 @@ const BeAVolunteerPage = () => {
                 type="email"
                 defaultValue={volunteerNeedsDetails.email}
                 disabled
-                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md  focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40  focus:outline-none focus:ring"
+                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring"
               />
             </div>
           </div>
@@ -207,7 +209,7 @@ const BeAVolunteerPage = () => {
                 type="text"
                 defaultValue={user?.displayName}
                 disabled
-                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md  focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40  focus:outline-none focus:ring"
+                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring"
               />
             </div>
             <div className="w-full">
@@ -219,7 +221,7 @@ const BeAVolunteerPage = () => {
                 type="email"
                 defaultValue={user?.email}
                 disabled
-                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md  focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40  focus:outline-none focus:ring"
+                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring"
               />
             </div>
           </div>
@@ -230,24 +232,27 @@ const BeAVolunteerPage = () => {
             <textarea
               defaultValue={volunteerNeedsDetails.description}
               disabled
-              className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md  focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40  focus:outline-none focus:ring"
+              className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring"
               name="description"
               id="description"
             ></textarea>
           </div>
           <div className="flex flex-col gap-2 mt-4">
-            <label className="text-gray-700 " htmlFor="description">
+            <label className="text-gray-700 " htmlFor="suggestion">
               Suggestion
             </label>
             <textarea
               placeholder="Suggestion"
-              className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md  focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40  focus:outline-none focus:ring"
+              className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring"
               name="suggestion"
-              id="description"
+              id="suggestion"
             ></textarea>
           </div>
           <div className="flex justify-end mt-6">
-            <button className="disabled:cursor-not-allowed px-8 py-2.5 leading-5 text-white font-semibold text-xl transition-colors duration-300 transhtmlForm bg-green-500 rounded-md hover:bg-green-500 focus:outline-none focus:bg-green-500 w-full">
+            <button
+              type="submit"
+              className="disabled:cursor-not-allowed px-8 py-2.5 leading-5 text-white font-semibold text-xl transition-colors duration-300 transhtmlForm bg-green-500 rounded-md hover:bg-green-500 focus:outline-none focus:bg-green-500 w-full"
+            >
               Request
             </button>
           </div>
@@ -257,4 +262,4 @@ const BeAVolunteerPage = () => {
   );
 };
 
-export default BeAVolunteerPage
+export default BeAVolunteerPage;

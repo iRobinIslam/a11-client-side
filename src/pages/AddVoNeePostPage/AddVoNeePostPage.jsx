@@ -9,9 +9,10 @@ const AddVoNeePostPage = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
   const [startDate, setStartDate] = useState(new Date());
+  
   useEffect(() => {
     document.title = "Add volunteer need post page | Volunteer management";
-  });
+  }, []);  // Added empty array to avoid calling on every render.
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,6 +37,7 @@ const AddVoNeePostPage = () => {
       email,
       description,
     };
+
     // make a post request
     try {
       await axiosSecure.post(`/add-volunteer-post`, formData);
@@ -43,17 +45,19 @@ const AddVoNeePostPage = () => {
       toast.success("Data added successfully", {
         position: "top-center",
       });
-    } catch (error) {
+    } catch (err) {
+      console.error("Error adding volunteer post:", err);  // Log the error
       toast.error("Something went wrong", {
         position: "top-center",
       });
     }
   };
+
   return (
     <div className="max-w-7xl mx-auto">
       <div className="mt-12 mx-4 lg:mx-0 bg-white p-3 lg:p-5 rounded-xl">
         <h3 className="text-center my-3 text-3xl text-black font-semibold">
-          Add volunteer need post{" "}
+          Add volunteer need post
         </h3>
         <form onSubmit={handleSubmit}>
           <div className="lg:flex gap-3">
@@ -64,8 +68,8 @@ const AddVoNeePostPage = () => {
               <input
                 name="thumbnail"
                 type="text"
-                placeholder="Thumbnail "
-                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md  focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40  focus:outline-none focus:ring"
+                placeholder="Thumbnail"
+                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring"
               />
             </div>
             <div className="w-full">
@@ -76,7 +80,7 @@ const AddVoNeePostPage = () => {
                 name="title"
                 type="text"
                 placeholder="Post Title"
-                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md  focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40  focus:outline-none focus:ring"
+                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring"
               />
             </div>
           </div>
@@ -102,7 +106,7 @@ const AddVoNeePostPage = () => {
                 name="location"
                 type="text"
                 placeholder="Location"
-                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md  focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40  focus:outline-none focus:ring"
+                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring"
               />
             </div>
           </div>
@@ -114,12 +118,12 @@ const AddVoNeePostPage = () => {
               <input
                 name="number"
                 type="number"
-                placeholder="No. of volunteers needed "
-                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md  focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40  focus:outline-none focus:ring"
+                placeholder="No. of volunteers needed"
+                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring"
               />
             </div>
             <div className="w-full">
-              <div className="flex flex-col gap-2 ">
+              <div className="flex flex-col gap-2">
                 <label className="text-gray-700">Deadline</label>
 
                 {/* Date Picker Input Field */}
@@ -141,7 +145,7 @@ const AddVoNeePostPage = () => {
                 type="text"
                 defaultValue={user?.displayName}
                 disabled
-                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md  focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40  focus:outline-none focus:ring"
+                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring"
               />
             </div>
             <div className="w-full">
@@ -153,7 +157,7 @@ const AddVoNeePostPage = () => {
                 type="email"
                 defaultValue={user?.email}
                 disabled
-                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md  focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40  focus:outline-none focus:ring"
+                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring"
               />
             </div>
           </div>
@@ -162,13 +166,15 @@ const AddVoNeePostPage = () => {
               Description
             </label>
             <textarea
-              className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md  focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40  focus:outline-none focus:ring"
+              className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring"
               name="description"
               id="description"
             ></textarea>
           </div>
           <div className="flex justify-end mt-6">
-            <button className="disabled:cursor-not-allowed px-8 py-2.5 leading-5 font-semibold text-white text-xl transition-colors duration-300 transhtmlForm bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:bg-green-500 w-full">
+            <button
+              className="disabled:cursor-not-allowed px-8 py-2.5 leading-5 font-semibold text-white text-xl transition-colors duration-300 bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:bg-green-500 w-full"
+            >
               Add Post
             </button>
           </div>
@@ -178,4 +184,4 @@ const AddVoNeePostPage = () => {
   );
 };
 
-export default AddVoNeePostPage
+export default AddVoNeePostPage;

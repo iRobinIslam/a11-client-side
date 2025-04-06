@@ -1,16 +1,16 @@
-
 import { toast } from "react-toastify";
 import axios from "axios";
 
 const MyVolunteerRequestPost = ({ data, requestData, setRequestData }) => {
-  const { _id, thumbnail, status, email, } = data;
-
   const handleDelete = async (id) => {
     try {
-      const { data } = await axios.delete(`${import.meta.env.VITE_API_URL}/deleteMyVolunteer-request/${id}`);
-      toast.success("Data removed successfully!!!!!");
-      const filter = requestData?.filter(fil => fil._id !== id)
-      setRequestData(filter)
+      // No need to destructure the response if you're not using it
+      await axios.delete(
+        `${import.meta.env.VITE_API_URL}/deleteMyVolunteer-request/${id}`
+      );
+      toast.success("Data removed successfully!");
+      const filter = requestData?.filter((fil) => fil._id !== id);
+      setRequestData(filter);
     } catch (error) {
       console.log(error.message);
       toast.error(error.message);
@@ -50,14 +50,14 @@ const MyVolunteerRequestPost = ({ data, requestData, setRequestData }) => {
     <>
       <tr>
         <th>
-          <img className="w-12 h-12 rounded-lg" src={thumbnail} alt="" />
+          <img className="w-12 h-12 rounded-lg" src={data.thumbnail} alt="" />
         </th>
-        <th className="hidden lg:flex">{email}</th>
-        <th className="text-green-700">{status}</th>
+        <th className="hidden lg:flex">{data.email}</th>
+        <th className="text-green-700">{data.status}</th>
         <td className="flex gap-2">
           <button
             onClick={() => {
-              modernDelete(_id);
+              modernDelete(data._id);
             }}
             className="bg-green-500 px-2 py-1 md:px-4 md:py-2 rounded text-white lg:text-lg"
           >
@@ -69,4 +69,4 @@ const MyVolunteerRequestPost = ({ data, requestData, setRequestData }) => {
   );
 };
 
-export default MyVolunteerRequestPost
+export default MyVolunteerRequestPost;
