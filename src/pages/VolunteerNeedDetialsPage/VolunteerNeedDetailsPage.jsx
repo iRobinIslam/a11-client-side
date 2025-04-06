@@ -5,20 +5,19 @@ import useAxiosSecure from "../../hook/useAxiosSecure";
 
 const VolunteerNeedDetailsPage = () => {
   const { id } = useParams();
-  const axiosSecure = useAxiosSecure()
-
+  const axiosSecure = useAxiosSecure();
   const [volunteerNeedsDetails, setVolunteerNeedsDetails] = useState({});
 
   useEffect(() => {
-    document.title = 'Volunteer need details page | Volunteer management'
-    fetchJobData();
-  }, [id]);
+    document.title = 'Volunteer need details page | Volunteer management';
 
-  const fetchJobData = async () => {
-    const { data } = await axiosSecure.get(`/volunteerDetails/${id}`
-    );
-    setVolunteerNeedsDetails(data);
-  };
+    const fetchJobData = async () => {
+      const { data } = await axiosSecure.get(`/volunteerDetails/${id}`);
+      setVolunteerNeedsDetails(data);
+    };
+
+    fetchJobData();
+  }, [id, axiosSecure]);
 
   return (
     <div className="pt-12">
@@ -30,7 +29,9 @@ const VolunteerNeedDetailsPage = () => {
           <h3 className="text-xl font-semibold">{volunteerNeedsDetails.title}</h3>
           <h4 className="text-lg">Category: {volunteerNeedsDetails.category}</h4>
           {
-            volunteerNeedsDetails?.deadline && <p className="text-lg">Deadline: {format(new Date(volunteerNeedsDetails.deadline), "P")}</p>
+            volunteerNeedsDetails?.deadline && (
+              <p className="text-lg">Deadline: {format(new Date(volunteerNeedsDetails.deadline), "P")}</p>
+            )
           }
           <p>Description: {volunteerNeedsDetails.description}</p>
           <p>No. of volunteers needed: {volunteerNeedsDetails.number}</p>
@@ -38,11 +39,11 @@ const VolunteerNeedDetailsPage = () => {
           <p>Name: {volunteerNeedsDetails.name}</p>
           <p>Location: {volunteerNeedsDetails.location}</p>
           <div>
-          <Link to={`/beAVolunteer/${id}`}>
-            <button className="text-lg bg-green-500 hover:bg-green-600 py-2 px-4 rounded-lg mt-2 text-white font-semibold">
-            Be a Volunteer
-            </button>
-          </Link>
+            <Link to={`/beAVolunteer/${id}`}>
+              <button className="text-lg bg-green-500 hover:bg-green-600 py-2 px-4 rounded-lg mt-2 text-white font-semibold">
+                Be a Volunteer
+              </button>
+            </Link>
           </div>
         </div>
       </div>
@@ -50,4 +51,4 @@ const VolunteerNeedDetailsPage = () => {
   );
 };
 
-export default VolunteerNeedDetailsPage
+export default VolunteerNeedDetailsPage;

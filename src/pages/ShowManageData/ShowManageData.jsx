@@ -9,24 +9,22 @@ const ShowManageData = ({ data, manageData, setManageData }) => {
 
   const handleDelete = async (id) => {
     try {
-      const { data } = await axios.delete(`${import.meta.env.VITE_API_URL}/deleteManageData/${id}`);
-      toast.success("Data deleted successfully!!!!!");
-      const filter = manageData?.filter(fil => fil._id !== id)
-      setManageData(filter)
+      await axios.delete(`${import.meta.env.VITE_API_URL}/deleteManageData/${id}`);
+      toast.success("Data deleted successfully!");
+      const updatedList = manageData?.filter((item) => item._id !== id);
+      setManageData(updatedList);
     } catch (error) {
-      console.log(error.message);
-      toast.error(error.message);
+      console.error(error.message);
+      toast.error("Failed to delete data");
     }
   };
 
   const modernDelete = (id) => {
     toast((t) => (
       <div className="flex gap-3 items-center">
-        <div>
-          <p>
-            Are you <b>sure?</b>
-          </p>
-        </div>
+        <p>
+          Are you <b>sure?</b>
+        </p>
         <div className="flex gap-2">
           <button
             className="bg-red-400 text-white px-3 py-1 rounded-md"
@@ -49,31 +47,27 @@ const ShowManageData = ({ data, manageData, setManageData }) => {
   };
 
   return (
-    <>
-      <tr>
-        <th>
-          <img className="w-12 h-12 rounded-lg" src={thumbnail} alt="" />
-        </th>
-        <th className="hidden lg:flex">{email}</th>
-        <th>{title}</th>
-        <td className="flex gap-2">
-          <Link to={`/updateManagePost/${_id}`}>
-            <button className="bg-green-500 px-2 py-1 md:px-4 md:py-2 rounded text-white lg:text-lg">
-              <FaRegEdit />
-            </button>
-          </Link>
-          <button
-            onClick={() => {
-              modernDelete(_id);
-            }}
-            className="bg-green-500 px-2 py-1 md:px-4 md:py-2 rounded text-white lg:text-lg"
-          >
-            <AiOutlineDelete />
+    <tr>
+      <th>
+        <img className="w-12 h-12 rounded-lg" src={thumbnail} alt="Thumbnail" />
+      </th>
+      <th className="hidden lg:table-cell">{email}</th>
+      <th>{title}</th>
+      <td className="flex gap-2">
+        <Link to={`/updateManagePost/${_id}`}>
+          <button className="bg-green-500 px-2 py-1 md:px-4 md:py-2 rounded text-white lg:text-lg">
+            <FaRegEdit />
           </button>
-        </td>
-      </tr>
-    </>
+        </Link>
+        <button
+          onClick={() => modernDelete(_id)}
+          className="bg-green-500 px-2 py-1 md:px-4 md:py-2 rounded text-white lg:text-lg"
+        >
+          <AiOutlineDelete />
+        </button>
+      </td>
+    </tr>
   );
 };
 
-export default ShowManageData
+export default ShowManageData;
