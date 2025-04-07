@@ -93,7 +93,8 @@ const SignIn = () => {
                 </label>
                 <input
                   type="password"
-                  name="password"
+                  name="password"npm install jsonwebtoken
+
                   placeholder="password"
                   className="input input-bordered"
                   required
